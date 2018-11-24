@@ -41,3 +41,9 @@ The fundamental steps to train a GAN can be described as following:
 - Sample a different noise subset with size m.
 - Train the Generator on this data.
 - Repeat from Step 1.
+
+**TensorBoard** : "The computations you'll use TensorFlow for - like training a massive deep neural network - can be complex and confusing. To make it easier to understand, debug, and optimize TensorFlow programs, we've included a suite of visualization tools called TensorBoard. You can use TensorBoard to visualize your TensorFlow graph, plot quantitative metrics about the execution of your graph, and show additional data like images that pass through it."
+
+**Leaky ReLU** :
+<p align="center"><img src="https://cdn-images-1.medium.com/max/1000/1*ypsvQH7kvtI2BhzR2eT_Sw.png" width="350" height="200"></p>
+Different types of ReLU, see : https://medium.com/tinymind/a-practical-guide-to-relu-b83ca804f1f7 
