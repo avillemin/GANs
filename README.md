@@ -47,3 +47,26 @@ The fundamental steps to train a GAN can be described as following:
 **Leaky ReLU** :
 <p align="center"><img src="https://cdn-images-1.medium.com/max/1000/1*ypsvQH7kvtI2BhzR2eT_Sw.png" width="350" height="200"></p>
 Different types of ReLU, see : https://medium.com/tinymind/a-practical-guide-to-relu-b83ca804f1f7 
+
+## Optimization
+Here we’ll use Adam as the optimization algorithm for both neural networks, with a learning rate of 0.0002. The proposed learning rate was obtained after testing with several values, though it isn’t necessarily the optimal value for this task.  
+
+The loss function we’ll be using for this task is named Binary Cross Entopy Loss (BCE Loss), and it will be used for this scenario as it resembles the log-loss for both the Generator and Discriminator defined earlier in the post (see Modeling Mathematically a GAN). Specifically we’ll be taking the average of the loss calculated for each minibatch.   
+
+![Alt Text](https://cdn-images-1.medium.com/max/1250/1*IcuF1_TXjngF2VHQjdwzjg.png)   
+
+In this formula the values y are named targets, v are the inputs, and w are the weights. Since we don’t need the weight at all, it’ll be set to wᵢ=1 for all i.
+
+**Discriminator loss :**
+
+![Alt Text](https://cdn-images-1.medium.com/max/1000/1*vh9PN7ktJMs7FH71yAnKKg.png)
+
+If we replace vᵢ = D(xᵢ) and yᵢ=1 ∀ i (for all i) in the BCE-Loss definition, we obtain the loss related to the real-images. Conversely if we set vᵢ = D(G(zᵢ)) and yᵢ=0 ∀ i, we obtain the loss related to the fake-images. In the mathematical model of a GAN I described earlier, the gradient of this had to be ascended, but PyTorch and most other Machine Learning frameworks usually minimize functions instead. Since maximizing a function is equivalent to minimizing it’s negative, and the BCE-Loss term has a minus sign, we don’t need to worry about the sign.
+
+**Discriminator loss :**
+
+![Alt Text](https://cdn-images-1.medium.com/max/1000/1*77HB-XBWpCc-ZIGbyaOisA.png)
+
+Rather than minimizing log(1- D(G(z))), training the Generator to maximize log D(G(z)) will provide much stronger gradients early in training. Both losses may be swapped interchangeably since they result in the same dynamics for the Generator and Discriminator.
+
+Maximizing log D(G(z)) is equivalent to minimizing it’s negative and since the BCE-Loss definition has a minus sign, we don’t need to take care of the sign. Similarly to the Discriminator, if we set vᵢ = D(G(zᵢ)) and yᵢ=1 ∀ i, we obtain the desired loss to be minimized.
