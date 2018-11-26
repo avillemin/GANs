@@ -75,7 +75,7 @@ Maximizing log D(G(z)) is equivalent to minimizing it’s negative and since the
 
 DCGAN : Deep Convolutional Generative Adversarial Networks
 
-https://medium.com/@jonathan_hui/gan-dcgan-deep-convolutional-generative-adversarial-networks-df855c438f
+[Source] https://medium.com/@jonathan_hui/gan-dcgan-deep-convolutional-generative-adversarial-networks-df855c438f
 
 DCGAN is one of the popular and successful network design for GAN. It mainly composes of convolution layers without max pooling or fully connected layers. It uses convolutional stride and transposed convolution for the downsampling and the upsampling. The figure below is the network design for the generator.
 
@@ -90,6 +90,8 @@ Here is the summary of DCGAN:
 - Use LeakyReLU in the discriminator.
 
 ## Convolutional stride
+[Source] http://machinelearninguru.com/computer_vision/basics/convolution/convolution_layer.html
+
 ![Alt Text](http://machinelearninguru.com/_images/topics/computer_vision/basics/convolutional_layer_1/stride2.gif)
 
 ![Alt Text](http://machinelearninguru.com/_images/topics/computer_vision/basics/convolutional_layer_1/rgb.gif)
