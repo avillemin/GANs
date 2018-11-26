@@ -1,7 +1,7 @@
 # Generative Adversarial Networks 
 
 [Paper] Generative Adversarial Nets : https://arxiv.org/pdf/1406.2661.pdf  
-[Tutotial] GANs from Scratch 1: A deep introduction. With code in PyTorch and TensorFlow : https://medium.com/ai-society/gans-from-scratch-1-a-deep-introduction-with-code-in-pytorch-and-tensorflow-cb03cdcdba0f
+[Source] GANs from Scratch 1: A deep introduction. With code in PyTorch and TensorFlow : https://medium.com/ai-society/gans-from-scratch-1-a-deep-introduction-with-code-in-pytorch-and-tensorflow-cb03cdcdba0f
 
 Examples of GANs :
 ![Alt Text](https://cdn-images-1.medium.com/max/1000/1*nKe_kwZoefrELGHh06sbuw.jpeg)
@@ -70,3 +70,77 @@ If we replace vᵢ = D(xᵢ) and yᵢ=1 ∀ i (for all i) in the BCE-Loss defini
 Rather than minimizing log(1- D(G(z))), training the Generator to maximize log D(G(z)) will provide much stronger gradients early in training. Both losses may be swapped interchangeably since they result in the same dynamics for the Generator and Discriminator.
 
 Maximizing log D(G(z)) is equivalent to minimizing it’s negative and since the BCE-Loss definition has a minus sign, we don’t need to take care of the sign. Similarly to the Discriminator, if we set vᵢ = D(G(zᵢ)) and yᵢ=1 ∀ i, we obtain the desired loss to be minimized.
+
+# DCGAN
+
+DCGAN : Deep Convolutional Generative Adversarial Networks
+
+https://medium.com/@jonathan_hui/gan-dcgan-deep-convolutional-generative-adversarial-networks-df855c438f
+
+DCGAN is one of the popular and successful network design for GAN. It mainly composes of convolution layers without max pooling or fully connected layers. It uses convolutional stride and transposed convolution for the downsampling and the upsampling. The figure below is the network design for the generator.
+
+![Alt Text](https://cdn-images-1.medium.com/max/1000/1*KvMnRfb76DponICrHIbSdg.png)
+
+Here is the summary of DCGAN:  
+- Replace all max pooling with convolutional stride
+- Use transposed convolution for upsampling.
+- Eliminate fully connected layers.
+- Use Batch normalization except the output layer for the generator and the input layer of the discriminator.
+- Use ReLU in the generator except for the output which uses tanh.
+- Use LeakyReLU in the discriminator.
+
+## Convolutional stride
+![Alt Text](http://machinelearninguru.com/_images/topics/computer_vision/basics/convolutional_layer_1/stride2.gif)
+
+![Alt Text](http://machinelearninguru.com/_images/topics/computer_vision/basics/convolutional_layer_1/rgb.gif)
+
+## Up-sampling with Transposed Convolution
+[Source] https://towardsdatascience.com/up-sampling-with-transposed-convolution-9ae4f2df52d0
+[Paper] https://arxiv.org/pdf/1603.07285.pdf
+
+When we use neural networks to generate images, it usually involves up-sampling from low resolution to high resolution.
+
+There are various methods to conduct up-sampling operation:  
+- Nearest neighbor interpolation
+- Bi-linear interpolation
+- Bi-cubic interpolation
+
+If we want our network to learn how to up-sample optimally, we can use the transposed convolution (also called fractionally-strided convolution or deconvolution). It does not use a predefined interpolation method. It has learnable parameters.
+
+![Alt Text](https://cdn-images-1.medium.com/max/1600/1*M33WSDDeOSx6nbUZ0sbkxQ.png)   
+Convolutional operation
+
+One important point of such convolution operation is that the positional connectivity exists between the input values and the output values.  
+For example, the top left values in the input matrix affect the top left value of the output matrix.  
+More concretely, the 3x3 kernel is used to connect the 9 values in the input matrix to 1 value in the output matrix. A convolution operation forms a many-to-one relationship. Let’s keep this in mind as we need it later on.
+
+We can express a convolution operation using a matrix.
+
+![Alt Text](https://cdn-images-1.medium.com/max/1600/1*0wFFJUNHLRPd3r8R6WT8ng.png)
+
+We rearrange the 3x3 kernel into a 4x16 matrix as below:
+
+![Alt Text](https://cdn-images-1.medium.com/max/1600/1*LKnTr_0k409vOjgj2h4-vg.png)
+
+![Alt Text](https://cdn-images-1.medium.com/max/1600/1*ql2ZxrS_h8D7KHNCrGndug.png)
+
+We can matrix-multiply the 4x16 convolution matrix with the 1x16 input matrix (16 dimensional column vector). The output 4x1 matrix can be reshaped into a 2x2 matrix which gives us the same result as before. In short, a convolution matrix is nothing but an rearranged kernel weights, and a convolution operation can be expressed using the convolution matrix.
+
+**Going Backward**
+Now, suppose we want to go the other direction. We want to associate 1 value in a matrix to 9 values in another matrix. It’s a one-to-many relationship. This is like going backward of convolution operation, and it is the core idea of transposed convolution.
+
+![Alt Text](https://cdn-images-1.medium.com/max/1600/1*4a4OjlszAvi7-vqjOT0PoA.png)   
+Going backward of Convolution
+
+We want to go from 4 (2x2) to 16 (4x4). So, we use a 16x4 matrix. But there is one more thing here. We want to maintain the 1 to 9 relationship.
+
+![Alt Text](https://cdn-images-1.medium.com/max/1600/1*JDAuBt3aS9mz3aQQ7JKYKA.png)
+
+The output can be reshaped into 4x4.
+
+We have just up-sampled a smaller matrix (2x2) into a larger one (4x4). The transposed convolution maintains the 1 to 9 relationship because of the way it lays out the weights.   
+NB: the actual weight values in the matrix does not have to come from the original convolution matrix. What important is that the weight layout is transposed from that of the convolution matrix.
+
+Moreover, the weights in the transposed convolution are learnable. So we do not need a predefined interpolation method.
+
+One caution: the transposed convolution is the cause of the checkerboard artifacts in generated images. This article recommends an up-sampling operation (i.e., an interpolation method) followed by a convolution operation to reduce such issues. If your main objective is to generate images without such artifacts, it is worth reading the paper to find out more.
