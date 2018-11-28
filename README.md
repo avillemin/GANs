@@ -3,7 +3,11 @@
 [Paper] Generative Adversarial Nets : https://arxiv.org/pdf/1406.2661.pdf  
 [Source] GANs from Scratch 1: A deep introduction. With code in PyTorch and TensorFlow : https://medium.com/ai-society/gans-from-scratch-1-a-deep-introduction-with-code-in-pytorch-and-tensorflow-cb03cdcdba0f
 
-Examples of GANs :
+In this repository, I'm trying to generate hand-written digits as below. To do this, I had to learn what is a GAN and how it works.
+
+<p align="center"><img src="https://github.com/diegoalejogm/gans/raw/master/.images/dcgan_mnist.gif"></p>
+
+More examples of GANs :
 ![Alt Text](https://cdn-images-1.medium.com/max/1000/1*nKe_kwZoefrELGHh06sbuw.jpeg)
 
 Some of the most relevant GAN pros and cons for the are:  
